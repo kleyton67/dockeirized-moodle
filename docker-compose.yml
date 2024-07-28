@@ -1,0 +1,36 @@
+# Use root/example as user/password credentials
+
+services:
+
+  db:
+    container_name: db
+    image: mysql
+    ports:
+      - $DBPORT
+    environment:
+      MYSQL_DATABASE: $DBNAME
+      MYSQL_ROOT_PASSWORD: $DBPASS
+  
+  moodle:
+    depends_on:
+      - db
+    environment:
+      - FIRST_INSTALL=$FIRST_INSTALL
+      - DBTYPE=$DBTYPE
+      - DBHOST=$DBHOST
+      - DBNAME=$DBNAME
+      - DBUSER=$DBUSER
+      - DBPASS=$DBPASS
+      - DBPORT=$DBPORT
+      - WWWROOT=$WWWROOT
+      - DATAROOT=$DATAROOT
+      - ADMINUSER=$ADMINUSER
+      - ADMINPASS=$ADMINPASS
+      - MOODLE_NAME=$MOODLE_NAME
+    ports:
+      - 8080:80
+      - 443
+    volumes:
+      - ./data_moodle:/mnt/data_moodle
+    build: .
+    image: kleyton67/moodle:$TAG
